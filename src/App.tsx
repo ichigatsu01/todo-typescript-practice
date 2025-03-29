@@ -4,8 +4,9 @@ import './App.css'
 function App() {
 
   const [ inputValue, setInputValue] = useState("");
-
   const [todos, setTodos] = useState<Todo[]>([]);
+  const [isInputed, setIsInputed] = useState(false);
+
 
   type Todo = {
     inputValue: string;
@@ -15,6 +16,7 @@ function App() {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setInputValue(e.target.value);
+    setIsInputed(e.target.value.trim() !== "")
   };
 
   const handleSubmit = (e:React.FormEvent<HTMLFormElement>) => {
@@ -28,7 +30,8 @@ function App() {
     };
     setTodos([newTodo, ...todos]);
     setInputValue("");
-    console.log(`Submitを実行。現在のinputValue:${inputValue}`)
+    // console.log(`Submitを実行。現在のinputValue:${inputValue}`)
+    setIsInputed(false)
   };
 
   const handleEdit = (id: number, inputValue: string) => {
@@ -56,13 +59,27 @@ function App() {
     setTodos(newTodos);
   }
 
+  // const handleInputed = () => {
+  //   if (inputValue !== "") {
+  //     setIsInputed(true)
+  //   } else {
+  //     setIsInputed(false)
+  //   }
+  // }
+
   return (
     <div className='App'>
       <div>
         <h2>TypeScriptで簡単ToDoアプリ</h2>
         <form onSubmit={(e) => handleSubmit(e)}>
           <input type="text" onChange={(e) => handleChange(e)} className='inputText' value={inputValue} />
-          <input type="submit" value="作成" className='submitButton' />
+          <input
+            type="submit"
+            value="作成"
+            className='submitButton'
+            disabled={!isInputed}
+            // disabled={true}
+          />
         </form>
         <ul className='todoList'>
           {todos.map((todo) => (
